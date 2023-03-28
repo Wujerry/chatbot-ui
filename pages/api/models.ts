@@ -1,5 +1,6 @@
 import { OpenAIModel, OpenAIModelID, OpenAIModels } from '@/types/openai';
 import { OPENAI_API_HOST } from '@/utils/app/const';
+import HttpsProxyAgent from 'https-proxy-agent';
 
 export const config = {
   runtime: 'edge',
@@ -11,11 +12,14 @@ const handler = async (req: Request): Promise<Response> => {
       key: string;
     };
 
+    const proxyAgent = new HttpsProxyAgent('http://127.0.0.1:7890');
+
     const response = await fetch(`${OPENAI_API_HOST}/v1/models`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${key ? key : process.env.OPENAI_API_KEY}`,
       },
+      agent: proxyAgent
     });
 
     if (response.status === 401) {
