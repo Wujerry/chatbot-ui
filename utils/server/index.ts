@@ -6,7 +6,6 @@ import {
   ReconnectInterval,
 } from 'eventsource-parser';
 import { OPENAI_API_HOST } from '../app/const';
-import HttpsProxyAgent from 'https-proxy-agent';
 
 export const OpenAIStream = async (
   model: OpenAIModel,
@@ -14,7 +13,6 @@ export const OpenAIStream = async (
   key: string,
   messages: Message[],
 ) => {
-  const proxyAgent = new HttpsProxyAgent('http://127.0.0.1:7890');
   const res = await fetch(`${OPENAI_API_HOST}/v1/chat/completions`, {
     headers: {
       'Content-Type': 'application/json',
@@ -34,7 +32,6 @@ export const OpenAIStream = async (
       temperature: 1,
       stream: true,
     }),
-    agent: proxyAgent,
   });
 
   if (res.status !== 200) {
